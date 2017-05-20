@@ -5,6 +5,7 @@
 	{
 		var scriptName = "template";
 		1
+		2
 		  
 		//mask整合
 		function onCollectClick()
