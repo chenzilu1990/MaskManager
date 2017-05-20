@@ -3,7 +3,7 @@
 	
 	function template(thisObj)
 	{
-		var scriptName = "template";
+		//var scriptName = "template";
 		
 		  
 		//mask整合
@@ -27,13 +27,8 @@
 				 
 
 					var maskGroup = selLayer.mask;
-				 
-					// var aSolid = selLayer.duplicate();
-
-					// for (var i = 1; i <= selLayer.mask.numProperties; i++) {
-					//  	//每次都要移除第一个mask
-					// 	aSolid.mask(1).remove();
-					// }
+				 				
+					 	
 
 					var solidItem = selLayer.source;
 					var aSolid = activeComp.layers.add(solidItem, activeComp.duration);
