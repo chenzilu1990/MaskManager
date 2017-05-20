@@ -12,6 +12,7 @@
 		6
 		7
 		8
+		9
 		  
 		//mask整合
 		function onCollectClick()
