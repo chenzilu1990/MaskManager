@@ -15,6 +15,7 @@
 		9
 		A
 		B
+		C
 		  
 		//mask整合
 		function onCollectClick()
