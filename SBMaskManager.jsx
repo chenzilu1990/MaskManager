@@ -16,6 +16,7 @@
 		A
 		B
 		C
+		D
 		  
 		//mask整合
 		function onCollectClick()
