@@ -21,7 +21,7 @@
 		a
 		b
  		
-		
+		A
 
 		//mask整合
 		function onCollectClick()
