@@ -3,7 +3,7 @@
 	
 	function template(thisObj)
 	{
-		//var scriptName = "template";
+		var scriptName = "template";
 		
 		  
 		//mask整合
