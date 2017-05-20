@@ -20,6 +20,8 @@
 		
 		a
 		b
+ 		
+		1
 
 		//mask整合
 		function onCollectClick()
