@@ -17,7 +17,10 @@
 		B
 		C
 		D
-		  
+		
+		a
+		b
+
 		//mask整合
 		function onCollectClick()
 		{
