@@ -4,7 +4,7 @@
 	function template(thisObj)
 	{
 		var scriptName = "template";
-		
+		1
 		  
 		//mask整合
 		function onCollectClick()
