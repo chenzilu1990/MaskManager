@@ -4,24 +4,7 @@
 	function template(thisObj)
 	{
 		var scriptName = "template";
-		1
-		2
-		3
-		4
-		5
-		6
-		7
-		8
-		9
-		A
-		B
-		C
-		D
 		
-		a
-		b
- 		
-		A
 
 		//mask整合
 		function onCollectClick()
@@ -187,7 +170,7 @@
 							 
 							var aSelLayer = selectedLayers[i];
 							var maskGroup = aSelLayer.mask;
-							if (maskGroup.numProperties == 0) alert("该图层没有马赛克");		//选中的图层没有mask
+							if (maskGroup.numProperties == 0) alert("第" + aSelLayer.index + "图层没有马赛克");		//选中的图层没有mask
 							for (var k = maskGroup.numProperties - 1; k >= 0; k--) {		//遍历选中图层的mask
 
 								var aMask = maskGroup(k+1);
@@ -251,6 +234,93 @@
 			}
 		}
 
+		//刷新
+		function onRefreshBtnClick()
+		{
+			my_palette.grp.cmds.listBox.removeAll();
+			var activeItem = app.project.activeItem;
+			if ((activeItem == null) || !(activeItem instanceof CompItem)) {
+				alert("请选择或打开一个合成.", scriptName);
+			} else {
+				var selectedLayers = activeItem.selectedLayers;
+				if (activeItem.selectedLayers.length == 0)  {
+					alert("至少选择一个图层或者mask", scriptName);
+				} else {
+
+					app.beginUndoGroup(scriptName);
+
+					var activeComp = activeItem;
+					var selLayer = activeComp.selectedLayers[0];
+					var selPros = selLayer.selectedProperties;
+            
+					var maskGroup = selLayer.mask;
+					 
+
+					if (selPros.length == 0) {		//只选中图层，没选中mask
+
+
+
+						for (var i = 0; i < selectedLayers.length; i++) {		//遍历选中的图层
+							 
+							var aSelLayer = selectedLayers[i];
+							var maskGroup = aSelLayer.mask;
+							if (maskGroup.numProperties == 0) alert("第" + aSelLayer.index + "图层没有马赛克");		//选中的图层没有mask
+							for (var k = maskGroup.numProperties - 1; k >= 0; k--) {		//遍历选中图层的mask
+
+								 
+
+								var masksArr = aSelLayer.mask;
+							
+								for (var j = masksArr.numProperties - 1; j >= 0; j--) {
+									var oneMask = masksArr(j + 1);
+									my_palette.grp.cmds.listBox.add("item", oneMask.name);
+
+
+								}
+
+
+
+							}
+						}
+
+
+
+					} else {
+
+						for (var i = selPros.length - 1; i >= 0; i--) {
+					 	 	var aMask = selPros[i];
+
+					 	 	//挑选出mask
+					 	 	
+					 	 	if (aMask.matchName == "ADBE Mask Atom") {
+					 	 		 
+				 	 			var maskName = aMask.name;
+
+		 						var dupLayer = selLayer.duplicate();
+		 						dupLayer.moveAfter(selLayer);
+								dupLayer.name = maskName;
+
+								var masksArr = dupLayer.mask;
+								
+								for (var j = masksArr.numProperties - 1; j >= 0; j--) {
+									var oneMask = masksArr(j + 1);
+									if (oneMask.name != maskName) oneMask.remove();
+
+								}
+
+					 	 	}
+
+						}
+								
+					}
+ 
+					
+					app.endUndoGroup();
+					
+				 
+				}
+			}
+		}
 		
 		//遍历给定数组中的Mask
 
@@ -291,7 +361,7 @@
 
 
 		 
-		
+		var a = "maskName";
 		// 
 		// This function puts up a modal dialog asking for a scale_factor.
 		// Once the user enters a value, the dialog closes, and the script scales the comp.
@@ -303,67 +373,20 @@
 			if (my_palette != null)
 			{
 				var res = 
-					"group { \
-						orientation:'column', alignment:['fill','top'], alignChildren:['left','top'], spacing:5, margins:[0,0,0,0], \
-						cmds: Group { \
-							alignment:['fill','top'], \
-							collectButton: Button { text:'mask整合', alignment:['fill','center'] }, \
-							separatetButton: Button { text:'一键分层', alignment:['fill','center'] }, \
-						}, \
-					}";
+							"group { \
+								orientation:'column', alignment:['fill','top'], alignChildren:['left','top'], spacing:5, margins:[0,0,0,0], \
+								cmds: Group { \
+									alignment:['fill','top'], \
+									collectButton: Button { text:'mask整合', alignment:['fill','center'] }, \
+									separatetButton: Button { text:'一键分层', alignment:['fill','center'] }, \
+									refreshBtn : Button { text : '刷新', alignment : ['fill', 'center'] },\
+									listBox : ListBox { properties:{multiselect:true}, alignment:['fill','center'] },\
+								}, \
+							}";
 				
 
 
-
-				/*var ares = 
-					"group { \
-						alignment:['fill','fill'], \
-						l: Group { \
-							orientation:'column', alignment:['left','fill'], \
-							header: Group { \
-								alignment:['fill','top'], \
-								title: StaticText { text:'" + rd_MarkerNavigatorData.scriptName + "', alignment:['fill','center'] }, \
-								help: Button { text:'" + rd_MarkerNavigator_localize(rd_MarkerNavigatorData.strHelp) +"', maximumSize:[30,30], alignment:['right','center'] }, \
-							}, \
-							r1: Group { \
-								alignment:['fill','fill'], \
-								listBox: ListBox { properties:{multiselect:true}, alignment:['fill','fill'] }, \
-							}, \
-							cmds: Group { \
-								alignment:['fill','bottom'], \
-								refreshBtn: Button { text:'" + rd_MarkerNavigator_localize(rd_MarkerNavigatorData.strRefresh) + "', alignment:['fill','bottom'], preferredSize:[-1,20] }, \
-							}, \
-						}, \
-						r: Group { \
-							orientation:'column', alignment:['fill','top'], alignChildren:['fill','top'], \
-							r1: Group { \
-								timeText: StaticText { text:'" + rd_MarkerNavigator_localize(rd_MarkerNavigatorData.strTime) + "', enabled:false, alignment:['left','center'] }, \
-								time: StaticText { text:'', enabled:false, alignment:['fill','center'] }, \
-							}, \
-							r2: Group { \
-								commentText: StaticText { text:'" + rd_MarkerNavigator_localize(rd_MarkerNavigatorData.strComment) + "', enabled:false, alignment:['left','center'] }, \
-								comment: EditText { text:'', characters:20, enabled:false, alignment:['fill','center'], preferredSize:[-1,20] }, \
-							}, \
-							optsPnl: Panel { \
-								text:'" + rd_MarkerNavigator_localize(rd_MarkerNavigatorData.strOptions) + "', enabled:false, alignment:['fill','fill'], alignChildren:['fill','top'], \
-								r1: Group { \
-									chText: StaticText { text:'" + rd_MarkerNavigator_localize(rd_MarkerNavigatorData.strChapter) + "', enabled:false, alignment:['left','center'] }, \
-									ch: EditText { text:'', characters:20, enabled:false, alignment:['fill','center'], preferredSize:[-1,20] }, \
-								}, \
-								r2: Group { \
-									urlText: StaticText { text:'" + rd_MarkerNavigator_localize(rd_MarkerNavigatorData.strURL) + "', enabled:false, alignment:['left','center'] }, \
-									url: EditText { text:'', characters:20, enabled:false, alignment:['fill','center'], preferredSize:[-1,20] }, \
-								}, \
-								r3: Group { \
-									frmText: StaticText { text:'" + rd_MarkerNavigator_localize(rd_MarkerNavigatorData.strFrameTarget) + "', enabled:false, alignment:['left','center'] }, \
-									frm: EditText { text:'', characters:20, enabled:false, alignment:['fill','center'], preferredSize:[-1,20] }, \
-								}, \
-							}, \
-						}, \
-					}";
-*/
-
-
+ 
 
 
 
@@ -372,6 +395,11 @@
 				my_palette.margins = [10,10,10,10];
 				my_palette.grp = my_palette.add(res);  
 				
+				for (var i = 0; i < 3; i++) {
+					my_palette.grp.cmds.listBox.add("item", a);
+				}
+
+
 				// Workaround to ensure the edittext text color is black, even at darker UI brightness levels.
 				var winGfx = my_palette.graphics;
 				var darkColorBrush = winGfx.newPen(winGfx.BrushType.SOLID_COLOR, [0,0,0], 1);
@@ -379,7 +407,8 @@
 				
 				my_palette.grp.cmds.collectButton.onClick = onCollectClick;
 				my_palette.grp.cmds.separatetButton.onClick = onSeparateClick;
-				
+				my_palette.grp.cmds.refreshBtn.onClick = onRefreshBtnClick;
+
 				my_palette.onResizing = my_palette.onResize = function () {this.layout.resize();}
 			}
 			
@@ -387,41 +416,7 @@
 		}
 		
 		
-		// 
-		// Sets newParent as the parent of all layers in theComp that don't have parents.
-		// This includes 2D/3D lights, camera, av, text, etc.
-		//
-		function makeParentLayerOfUnparentedInArray(layerArray, newParent)
-		{
-			for (var i = 0; i < layerArray.length; i++) {
-				var curLayer = layerArray[i];
-				if (curLayer != newParent && curLayer.parent == null) {
-					curLayer.parent = newParent;
-				}
-			}
-		}
-		
-		
-		//
-		// Scales the zoom factor of every camera by the given scale_factor.
-		// Handles both single values and multiple keyframe values.
-		function scaleCameraZoomsInArray(layerArray, scaleBy)
-		{
-			for (var i = 0; i < layerArray.length; i++) {
-				var curLayer = layerArray[i];
-				if (curLayer.matchName == "ADBE Camera Layer") {
-					var curZoom = curLayer.zoom;
-					if (curZoom.numKeys == 0) {
-						curZoom.setValue(curZoom.value * scaleBy);
-					} else {
-						for (var j = 1; j <= curZoom.numKeys; j++) {
-							curZoom.setValueAtKey(j,curZoom.keyValue(j)*scaleBy);
-						}
-					}
-				}
-			}
-		}
-		
+		 
 		// 
 		// The main script.
 		//
@@ -433,9 +428,11 @@
 		var my_palette = BuildAndShowUI(thisObj);
 		if (my_palette != null) {
 			if (my_palette instanceof Window) {
+
 				my_palette.center();
 				my_palette.show();
 			} else {
+
 				my_palette.layout.layout(true);
 				my_palette.layout.resize();
 			}
