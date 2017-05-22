@@ -185,7 +185,7 @@
 
 
 
-								//dupLayer.name = aSelLayer.name + "-" + maskName;
+
 
 								var masksArr = dupLayer.mask;
 							
@@ -193,7 +193,7 @@
 									var oneMask = masksArr(j);
 
 									if (j != k) oneMask.remove();
-									//oneMask.name = dupLayer.name + "-" + oneMask.name;
+
 								}
 
 
