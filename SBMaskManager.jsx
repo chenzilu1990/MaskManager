@@ -146,11 +146,11 @@
 		{
 			var activeItem = app.project.activeItem;
 			if ((activeItem == null) || !(activeItem instanceof CompItem)) {
-				alert("请选择或打开一个合成.", scriptName);
+				alert("请选中或打开一个合成.", scriptName);
 			} else {
 				var selectedLayers = activeItem.selectedLayers;
 				if (activeItem.selectedLayers.length != 1)  {
-					alert("请选择一个图层或者多个mask", scriptName);
+					alert("请选中一个图层或者多个mask", scriptName);
 				} else {
 
 					app.beginUndoGroup(scriptName);
@@ -168,37 +168,37 @@
 
 						 
 							 
-							var aSelLayer = selLayer;
-							var maskGroup = aSelLayer.mask;
-							var numMasks = maskGroup.numProperties;
-							if (maskGroup.numProperties == 0) alert("第" + aSelLayer.index + "图层 : " + aSelLayer.name + "没有马赛克");		//选中的图层没有mask
-							for (var k = numMasks; k >= 1; k--) {		//遍历选中图层的mask
+						var aSelLayer = selLayer;
+						var maskGroup = aSelLayer.mask;
+						var numMasks = maskGroup.numProperties;
+						if (maskGroup.numProperties == 0) alert("第" + aSelLayer.index + "图层 : " + aSelLayer.name + "没有马赛克");		//选中的图层没有mask
+						for (var k = numMasks; k >= 1; k--) {		//遍历选中图层的mask
 
-								var aMask = maskGroup(k);
-								 
-								var maskName = aMask.name;		
+							var aMask = maskGroup(k);
+							 
+							var maskName = aMask.name;		
 
-		 						var dupLayer = aSelLayer.duplicate();
-		 						dupLayer.moveAfter(aSelLayer);
-		 						dupLayer.name = maskName;
-
-
+	 						var dupLayer = aSelLayer.duplicate();
+	 						dupLayer.moveAfter(aSelLayer);
+	 						dupLayer.name = maskName;
 
 
 
 
-								var masksArr = dupLayer.mask;
-							
-								for (var j = numMasks; j >= 1; j--) {
-									var oneMask = masksArr(j);
-
-									if (j != k) oneMask.remove();
-
-								}
 
 
+							var masksArr = dupLayer.mask;
+						
+							for (var j = numMasks; j >= 1; j--) {
+								var oneMask = masksArr(j);
+
+								if (j != k) oneMask.remove();
 
 							}
+
+
+
+						}
 
 
 
@@ -213,17 +213,18 @@
 					 	 	if (aMask.matchName == "ADBE Mask Atom") {
 					 	 		 
 				 	 			var maskName = aMask.name;
-
+				 	 			var maskIndex = aMask.propertyIndex;
+				 	 			alert(maskIndex);
 		 						var dupLayer = selLayer.duplicate();
 		 						dupLayer.moveAfter(selLayer);
 								dupLayer.name = maskName;
 
 								var masksArr = dupLayer.mask;
 								
-								for (var j = masksArr.numProperties - 1; j >= 0; j--) {
-									var oneMask = masksArr(j + 1);
+								for (var j = masksArr.numProperties; j >= 1; j--) {
+									var oneMask = masksArr(j);
 
-									if (oneMask.name != maskName) oneMask.remove();
+									if (j != maskIndex) oneMask.remove();
 
 								}
 
