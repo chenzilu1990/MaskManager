@@ -149,8 +149,8 @@
 				alert("请选择或打开一个合成.", scriptName);
 			} else {
 				var selectedLayers = activeItem.selectedLayers;
-				if (activeItem.selectedLayers.length == 0)  {
-					alert("至少选择一个图层或者mask", scriptName);
+				if (activeItem.selectedLayers.length != 1)  {
+					alert("请选择一个图层或者多个mask", scriptName);
 				} else {
 
 					app.beginUndoGroup(scriptName);
@@ -166,12 +166,12 @@
 
 
 
-						for (var i = 0; i < selectedLayers.length; i++) {		//遍历选中的图层
+						 
 							 
-							var aSelLayer = selectedLayers[i];
+							var aSelLayer = selLayer;
 							var maskGroup = aSelLayer.mask;
 							var numMasks = maskGroup.numProperties;
-							if (maskGroup.numProperties == 0) alert("第" + aSelLayer.index + "图层没有马赛克");		//选中的图层没有mask
+							if (maskGroup.numProperties == 0) alert("第" + aSelLayer.index + "图层 : " + aSelLayer.name + "没有马赛克");		//选中的图层没有mask
 							for (var k = numMasks; k >= 1; k--) {		//遍历选中图层的mask
 
 								var aMask = maskGroup(k);
@@ -199,7 +199,7 @@
 
 
 							}
-						}
+
 
 
 
