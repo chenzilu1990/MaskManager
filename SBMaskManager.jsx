@@ -170,23 +170,29 @@
 							 
 							var aSelLayer = selectedLayers[i];
 							var maskGroup = aSelLayer.mask;
+							var numMasks = maskGroup.numProperties;
 							if (maskGroup.numProperties == 0) alert("第" + aSelLayer.index + "图层没有马赛克");		//选中的图层没有mask
-							for (var k = maskGroup.numProperties - 1; k >= 0; k--) {		//遍历选中图层的mask
+							for (var k = numMasks; k >= 1; k--) {		//遍历选中图层的mask
 
-								var aMask = maskGroup(k+1);
+								var aMask = maskGroup(k);
 								 
 								var maskName = aMask.name;		
 
 		 						var dupLayer = aSelLayer.duplicate();
 		 						dupLayer.moveAfter(aSelLayer);
-		 						//dupLayer.name = maskName;
-								dupLayer.name = aSelLayer.name + "-" + maskName;
+		 						dupLayer.name = maskName;
+
+
+
+
+								//dupLayer.name = aSelLayer.name + "-" + maskName;
 
 								var masksArr = dupLayer.mask;
 							
-								for (var j = masksArr.numProperties - 1; j >= 0; j--) {
-									var oneMask = masksArr(j + 1);
-									if (oneMask.name != maskName) {oneMask.remove()}
+								for (var j = numMasks; j >= 1; j--) {
+									var oneMask = masksArr(j);
+
+									if (j != k) oneMask.remove();
 									//oneMask.name = dupLayer.name + "-" + oneMask.name;
 								}
 
@@ -216,6 +222,7 @@
 								
 								for (var j = masksArr.numProperties - 1; j >= 0; j--) {
 									var oneMask = masksArr(j + 1);
+
 									if (oneMask.name != maskName) oneMask.remove();
 
 								}
