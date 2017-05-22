@@ -209,12 +209,13 @@
 					 	 	var aMask = selPros[i];
 
 					 	 	//挑选出mask
-					 	 	
-					 	 	if (aMask.matchName == "ADBE Mask Atom") {
+					 	 	// alert(aMask.matchName);
+					 	 	// alert(aMask.isMask);
+					 	 	if (aMask.isMask) {
 					 	 		 
 				 	 			var maskName = aMask.name;
 				 	 			var maskIndex = aMask.propertyIndex;
-				 	 			alert(maskIndex);
+				 	 			//alert(maskIndex);
 		 						var dupLayer = selLayer.duplicate();
 		 						dupLayer.moveAfter(selLayer);
 								dupLayer.name = maskName;
