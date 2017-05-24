@@ -34,7 +34,7 @@
 					var aSolid = activeComp.layers.add(solidItem, activeComp.duration);
 
 
-					//var aSolid = activeComp.layers.addSolid([1, 1, 1], "baise", activeComp.width, activeComp.height, 1.0, activeComp.duration);
+
 
 
 
@@ -70,33 +70,33 @@
 						for (var i = 0; i < selectedLayers.length ; i++) {
 							//一个选中的图层
 							var aSelLayer = selectedLayers[i];
+
 							var aSelLayerXoffset = aSelLayer.transform.position.value[0] - aSelLayer.transform.anchorPoint.value[0] ;
 							var aSelLayerYoffset = aSelLayer.transform.position.value[1] - aSelLayer.transform.anchorPoint.value[1] ;
-							// var aSelLayerXoffset = aSelLayer.transform.position.value[0] - activeComp.width / 2;
-							// var aSelLayerYoffset = aSelLayer.transform.position.value[1] - activeComp.height / 2;
 							var aSelLayerOffset = [aSelLayerXoffset, aSelLayerYoffset];
-							//alert(aSelLayerOffset);
 
 
-							{
 
-								//遍历选中图层的所有mask
+
+							
+
+							//遍历选中图层的所有mask
+							 
+							for (var j = 1; j <= aSelLayer.mask.numProperties; j++) {
+								var aMask = aSelLayer.mask(j);
 								 
-								for (var j = 1; j <= aSelLayer.mask.numProperties; j++) {
-									var aMask = aSelLayer.mask(j);
-									 
-									var addMask = aSolid.mask.addProperty("ADBE Mask Atom");
-									 
+								var addMask = aSolid.mask.addProperty("ADBE Mask Atom");
+								 
 
-									addMask.color = aMask.color;
-									var maskPath = aMask.property("ADBE Mask Shape");
-									 									 
-									emuMaskPath(maskPath, addMask, aSelLayerOffset);
-									addMask.name = aSelLayer.name + "-"  + aMask.name; 
-								}
+								addMask.color = aMask.color;
+								var maskPath = aMask.property("ADBE Mask Shape");
+								 									 
+								emuMaskPath(maskPath, addMask, aSelLayerOffset);
+								//addMask.name = aSelLayer.name + "-"  + aMask.name; 
+							}
  	 
 
-							}
+							
 
 							 
 						}
@@ -128,12 +128,19 @@
 		function emuMaskPath (maskPath, addMask, aSelLayerOffset)
 		{	
 			//遍历maskPath关键帧
-			for (var k =  1; k < maskPath.numKeys + 1; k++) {
 
-	 			var time = maskPath.keyTime(k);
-				var path = maskPath.valueAtTime(time,false);
-		 		//拷贝每一帧路径并设置值
-				addMask.property("ADBE Mask Shape").setValueAtTime(time,copyPath(path, aSelLayerOffset));
+			if (maskPath.isTimeVarying) {
+
+				for (var k =  1; k < maskPath.numKeys + 1; k++) {
+
+		 			var time = maskPath.keyTime(k);
+					var path = maskPath.valueAtTime(time,false);
+			 		//拷贝每一帧路径并设置值
+					addMask.property("ADBE Mask Shape").setValueAtTime(time,copyPath(path, aSelLayerOffset));
+				}
+			} else {
+				var path = maskPath.value;
+				addMask.property("ADBE Mask Shape").setValue(copyPath(path,aSelLayerOffset));
 			}
 			return addMask;
 		}
